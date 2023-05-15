@@ -5,8 +5,9 @@ This tool read KPI declarations in a file and apply the KPI assertion on a JMete
 [Manual Dashboard](https://jmeter.apache.org/usermanual/generating-dashboard.html#report)
 JMeter Dashboard Statistics Json file could be generated in Command Line Interface (CLI) with :
 - Generation from an existing sample CSV log file
-  - jmeter -g &lt;log file&gt; -o &lt;Path to output folder>
-- Generation from an existing sample CSV log file
+  - jmeter -g &lt;log file&gt; -o &lt;Path to output folder&gt;
+  - jmeter -g &lt;log file&gt; -o &lt;Path to output folder&gt; -Jjmeter.reportgenerator.exporter.html.series_filter="SC[0-9]+_.*" -Jjmeter.reportgenerator.overall_granularity=4000 (with filter and granularity parameters)
+- Generation after load test
   - jmeter -n -t &lt;test JMX file&gt; -l &lt;test log file&gt; -e -o &lt;Path to output folder&gt;
 
 The JMeter Dashboard Json file statistics.json is created in the &lt;Path to output folder&gt;<br>
