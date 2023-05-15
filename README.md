@@ -20,7 +20,7 @@ The KPI file needs 5 columns :
 2) metric_json_attribute the attribute name in the statistics.json file (**Attributes** are : `sampleCount` or `errorCount` or `errorPct` or `meanResTime` or `medianResTime` or `minResTime` or `maxResTime` or `pct1ResTime` (90 percentile) or `pct2ResTime` (95 percentile) or `pct3ResTime` (99 percentile) or `throughput` or `receivedKBytesPerSec` or `sentKBytesPerSec`)
 3) label_regex the Label name in regular expression, the transaction attribute in the JMeter Dashboard statistics.json file (E.g : `SC01_P.*` or `SC\d+_P.*` or `SC01_P01_LOGIN` or `SC01_P01_LOGIN|SC01_P02_HOME` or `\d+ /.*` )
 4) comparator the comparator `<` or `<=` or `>` or `>=`
-5) threshold the value (for percentage rate use value between 0 and 1, e.g : 0.02 for 2%)
+5) threshold the value (for percentage rate `errorPct` use value between 0 and 1, e.g : 0.02 for 2%)
 
 The column separator is ',' for the kpi file
 <pre>
