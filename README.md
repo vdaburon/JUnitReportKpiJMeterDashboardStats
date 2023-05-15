@@ -160,8 +160,10 @@ This tool is a java jar, so it's could be use as simple jar (look at [Release](h
 java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-&lt;version&gt;-jar-with-dependencies.jar -jsonStats statistics.json -kpiFile kpi.csv -junitFile junit-report.xml -exitReturnOnFail true
 </pre>
 
-## Link to other project
-Usually this plugin is use with [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
+## Link to others projects 
+Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-maven-plugin/jmeter-maven-plugin) set `<generateReports>true</generateReports>` to generate the dashboard with `statistics.json` file.<br>
+
+You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
 Version 1.0 initial version
