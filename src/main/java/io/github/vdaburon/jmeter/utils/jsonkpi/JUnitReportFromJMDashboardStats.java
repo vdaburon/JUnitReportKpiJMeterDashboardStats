@@ -226,14 +226,7 @@ public class JUnitReportFromJMDashboardStats {
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
-                                String failMessage = checkKpiResult.getFailMessage();
-                                if ((failMessage.length() + label.length()) < K_FAIL_MESSAGE_SIZE_MAX) {
-                                    failMessage += ", \"" + label + "\"";
-                                } else {
-                                    if (!failMessage.endsWith(" ...")) {
-                                        failMessage += " ...";
-                                    }
-                                }
+                                String failMessage = concatFailMessage(checkKpiResult, label);
                                 checkKpiResult.setFailMessage(failMessage);
                             }
                         }
@@ -249,14 +242,7 @@ public class JUnitReportFromJMDashboardStats {
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
-                                String failMessage = checkKpiResult.getFailMessage();
-                                if ((failMessage.length() + label.length()) < K_FAIL_MESSAGE_SIZE_MAX) {
-                                    failMessage += ", \"" + label + "\"";
-                                } else {
-                                    if (!failMessage.endsWith(" ...")) {
-                                        failMessage += " ...";
-                                    }
-                                }
+                                String failMessage = concatFailMessage(checkKpiResult, label);
                                 checkKpiResult.setFailMessage(failMessage);
                             }
                         }
@@ -272,14 +258,7 @@ public class JUnitReportFromJMDashboardStats {
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
-                                String failMessage = checkKpiResult.getFailMessage();
-                                if ((failMessage.length() + label.length()) < K_FAIL_MESSAGE_SIZE_MAX) {
-                                    failMessage += ", \"" + label + "\"";
-                                } else {
-                                    if (!failMessage.endsWith(" ...")) {
-                                        failMessage += " ...";
-                                    }
-                                }
+                                String failMessage = concatFailMessage(checkKpiResult, label);
                                 checkKpiResult.setFailMessage(failMessage);
                             }
                         }
@@ -295,14 +274,7 @@ public class JUnitReportFromJMDashboardStats {
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
-                                String failMessage = checkKpiResult.getFailMessage();
-                                if ((failMessage.length() + label.length()) < K_FAIL_MESSAGE_SIZE_MAX) {
-                                    failMessage += ", \"" + label + "\"";
-                                } else {
-                                    if (!failMessage.endsWith(" ...")) {
-                                        failMessage += " ...";
-                                    }
-                                }
+                                String failMessage = concatFailMessage(checkKpiResult, label);
                                 checkKpiResult.setFailMessage(failMessage);
                             }
                         }
@@ -313,6 +285,18 @@ public class JUnitReportFromJMDashboardStats {
             }
         }
         return checkKpiResult;
+    }
+
+    private static String concatFailMessage(CheckKpiResult checkKpiResult, String label) {
+        String failMessage = checkKpiResult.getFailMessage();
+        if ((failMessage.length() + label.length()) < K_FAIL_MESSAGE_SIZE_MAX) {
+            failMessage += ", \"" + label + "\"";
+        } else {
+            if (!failMessage.endsWith(" ...")) {
+                failMessage += " ...";
+            }
+        }
+        return failMessage;
     }
 
     /**
