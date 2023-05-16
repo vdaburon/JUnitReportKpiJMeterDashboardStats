@@ -20,6 +20,8 @@ import java.io.File;
  */
 
 public class UtilsJUnitXml {
+    public static final String TEST_SUITE_NAME = "JUnit Report From Dashboard Statistics";
+
     /**
      * Create the DOM for a JUnit XML file
      * @return the DOM with testsuite root element
@@ -29,7 +31,7 @@ public class UtilsJUnitXml {
 /*
 <testsuite errors="0"
         failures="2"
-        name="JUnit Report From JMeter Report Csv"
+        name="JUnit Report From Dashboard Statistics"
         skipped="0"
         tests="3">
  */
@@ -50,7 +52,7 @@ public class UtilsJUnitXml {
         root.setAttributeNode(attr2);
 
         Attr attr3 = document.createAttribute("name");
-        attr3.setValue("JUnit Report From JMeter Report Csv");
+        attr3.setValue(TEST_SUITE_NAME);
         root.setAttributeNode(attr3);
 
         Attr attr4 = document.createAttribute("skipped");

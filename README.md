@@ -60,7 +60,7 @@ or more parameters : java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-&l
 Example JUnit XML file generated :
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testsuite errors="0" failures="2" name="JUnit Report From JMeter Report Csv" skipped="0" tests="6">
+<testsuite errors="0" failures="2" name="JUnit Report From Dashboard Statistics" skipped="0" tests="6">
   <testcase classname="Percentiles_90" name="pct1ResTime (SC\d+_P.*) &lt;= 2000"/>
   <testcase classname="Percentiles_90 specific pages" name="pct1ResTime (SC01_P03_LOGIN|SC03_P03_LOGIN) &lt;= 10">
     <failure message="">Actual value 57.0 exceeds or equals threshold 10.0 for samples matching "SC01_P03_LOGIN|SC03_P03_LOGIN"; fail label(s) "SC03_P03_LOGIN"</failure>
@@ -98,7 +98,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-<version>1.1</version>
+<version>1.2</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
 or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:java@create_junit-report-kpi-from-jmeter-json-statics`
@@ -117,7 +117,7 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
     <dependency>
       <groupId>io.github.vdaburon</groupId>
       <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
     </dependency>
   </dependencies>
 
@@ -167,6 +167,8 @@ Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
+Version 1.2 change the Test Suite Name
+
 Version 1.1 change Fail Message when equality
 
 Version 1.0 initial version
