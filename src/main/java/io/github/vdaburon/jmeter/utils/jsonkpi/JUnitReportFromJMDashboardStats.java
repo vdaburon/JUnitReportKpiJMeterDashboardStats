@@ -123,6 +123,10 @@ public class JUnitReportFromJMDashboardStats {
 
         Document document = UtilsJUnitXml.createJUnitRootDocument();
         for (int i = 0; i < csvKpiLines.size(); i++) {
+            CSVRecord recordKpiLine = csvKpiLines.get(i);
+            if (recordKpiLine.size() < 3) {
+                continue;
+            }
             CheckKpiResult checkKpiResult = verifyKpi(csvKpiLines.get(i), listStats);
             if (checkKpiResult.isKpiFail()) {
                 isFail = true;
@@ -218,7 +222,7 @@ public class JUnitReportFromJMDashboardStats {
                             isFailKpi = true;
                             if (isFirstFail) {
                                 isFirstFail = false;
-                                String failMessage = "Actual value " +  dMetric + " exceeds threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\""; // Actual value 2908,480000 exceeds threshold 2500,000000 for samples matching "@SC01_P03_DUMMY"
+                                String failMessage = "Actual value " +  dMetric + " exceeds or equals threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\""; // Actual value 2908,480000 exceeds threshold 2500,000000 for samples matching "@SC01_P03_DUMMY"
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
@@ -241,7 +245,7 @@ public class JUnitReportFromJMDashboardStats {
                             isFailKpi = true;
                             if (isFirstFail) {
                                 isFirstFail = false;
-                                String failMessage = "Actual value " + dMetric + " exceeds or equals threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
+                                String failMessage = "Actual value " + dMetric + " exceeds threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
@@ -264,7 +268,7 @@ public class JUnitReportFromJMDashboardStats {
                             isFailKpi = true;
                             if (isFirstFail) {
                                 isFirstFail = false;
-                                String failMessage = "Actual value " + dMetric + " is less then threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
+                                String failMessage = "Actual value " + dMetric + " is less or equals then threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {
@@ -287,7 +291,7 @@ public class JUnitReportFromJMDashboardStats {
                             isFailKpi = true;
                             if (isFirstFail) {
                                 isFirstFail = false;
-                                String failMessage = "Actual value " + dMetric + "is less or equals threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
+                                String failMessage = "Actual value " + dMetric + " is less threshold " + dThreshold + " for samples matching \"" + labelRegex + "\"; fail label(s) \"" + label + "\"";
                                 checkKpiResult.setKpiFail(true);
                                 checkKpiResult.setFailMessage(failMessage);
                             } else {

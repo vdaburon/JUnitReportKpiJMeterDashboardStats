@@ -98,7 +98,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-<version>1.0</version>
+<version>1.1</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
 or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:java@create_junit-report-kpi-from-jmeter-json-statics`
@@ -117,7 +117,7 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
     <dependency>
       <groupId>io.github.vdaburon</groupId>
       <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
   </dependencies>
 
@@ -167,5 +167,7 @@ Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
+Version 1.1 change Fail Message when equality
+
 Version 1.0 initial version
 
