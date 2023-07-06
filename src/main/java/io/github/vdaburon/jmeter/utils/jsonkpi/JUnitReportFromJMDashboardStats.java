@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import freemarker.template.TemplateException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -30,6 +31,10 @@ public class JUnitReportFromJMDashboardStats {
     public static final String K_JSON_JM_STATS_OPT = "jsonStats";
     public static final String K_KPI_FILE_OPT = "kpiFile";
     public static final String K_JUNIT_XML_FILE_OPT = "junitFile";
+    public static final String K_OUT_HTML_FILE_OPT = "htmlOutFile";
+    public static final String K_OUT_DIV_HTML_FILE_OPT = "divHtmlOutFile";
+    public static final String K_OUT_CSV_FILE_OPT = "csvOutFile";
+    public static final String K_OUT_JSON_FILE_OPT = "jsonOutFile";
     public static final String K_EXIT_RETURN_ON_FAIL_OPT = "exitReturnOnFail";
 
 
@@ -40,6 +45,17 @@ public class JUnitReportFromJMDashboardStats {
     public static final String K_COL_COMPARATOR = "comparator";
     public static final String K_COL_THREASHOLD = "threshold";
 
+    // Column name for Html or CSV out file
+    public static final String K_CSV_COL_OUT_RESULT = "result";
+    public static final String K_CSV_COL_OUT_FAIL_MSG = "fail_msg";
+
+    private static final String K_NOT_SET = "NOT SET";
+    public static final String K_FREEMARKER_HTML_TEMPLATE_DIRECTORY = "/templates_freemarker";
+    public static final String K_FREEMARKER_HTML_TEMPLATE = "template_html_result.ftl";
+    public static final String K_FREEMARKER_DIV_HTML_TEMPLATE = "template_div_result.ftl";
+
+    public static final int K_TYPE_HTML_TEMPLATE = 1;
+    public static final int K_TYPE_DIV_HTML_TEMPLATE = 2;
     public static final int K_FAIL_MESSAGE_SIZE_MAX = 1024;
 
     public static void main(String[] args) {
@@ -56,9 +72,14 @@ public class JUnitReportFromJMDashboardStats {
         }
         int exitReturn = K_RETURN_KO;
 
-        String jsonJmeterStats = "NOT SET";
-        String kpiFile = "NOT SET";
+        String jsonJmeterStats = K_NOT_SET;
+        String kpiFile = K_NOT_SET;
         String junitFile = K_JUNIT_XML_FILE_DEFAULT;
+        String htmlFile = K_NOT_SET;
+        String divHtmlFile = K_NOT_SET;
+        String csvFile = K_NOT_SET;
+        String jsonFile = K_NOT_SET;
+
         boolean exitOnFailKpi = false;
 
         String sTmp;
@@ -78,6 +99,26 @@ public class JUnitReportFromJMDashboardStats {
             junitFile = sTmp;
         }
 
+        sTmp = (String) parseProperties.get(K_OUT_HTML_FILE_OPT);
+        if (sTmp != null && sTmp.length() > 1) {
+            htmlFile = sTmp;
+        }
+
+        sTmp = (String) parseProperties.get(K_OUT_DIV_HTML_FILE_OPT);
+        if (sTmp != null && sTmp.length() > 1) {
+            divHtmlFile = sTmp;
+        }
+
+        sTmp = (String) parseProperties.get(K_OUT_CSV_FILE_OPT);
+        if (sTmp != null && sTmp.length() > 1) {
+            csvFile = sTmp;
+        }
+
+        sTmp = (String) parseProperties.get(K_OUT_JSON_FILE_OPT);
+        if (sTmp != null && sTmp.length() > 1) {
+            jsonFile = sTmp;
+        }
+
         sTmp = (String) parseProperties.get(K_EXIT_RETURN_ON_FAIL_OPT);
         if (sTmp != null) {
             exitOnFailKpi = Boolean.parseBoolean(sTmp);
@@ -86,7 +127,7 @@ public class JUnitReportFromJMDashboardStats {
         boolean isKpiFail = false;
         LOGGER.info("Parameters CLI:" + parseProperties);
         try {
-            isKpiFail = analyseJsonJMReportWithKpiRules(jsonJmeterStats, kpiFile, junitFile);
+            isKpiFail = analyseJsonJMReportWithKpiRules(jsonJmeterStats, kpiFile, junitFile, htmlFile, divHtmlFile, csvFile, jsonFile);
             LOGGER.info("isKpiFail=" + isKpiFail);
         } catch (Exception ex) {
             LOGGER.warning(ex.toString());
@@ -116,11 +157,18 @@ public class JUnitReportFromJMDashboardStats {
      * @throws ParserConfigurationException error reading csv file
      * @throws TransformerException error writing JUnit XML file
      */
-    private static boolean analyseJsonJMReportWithKpiRules(String jsonJmeterStats, String kpiFile, String junitFile) throws IOException, ParserConfigurationException, TransformerException {
+    private static boolean analyseJsonJMReportWithKpiRules(String jsonJmeterStats, String kpiFile, String junitFile, String htmlFile, String divHtmlFile, String csvFile, String jsonFile) throws IOException, ParserConfigurationException, TransformerException, TemplateException {
         boolean isFail = false;
         List<Statistic> listStats = UtilsJsonFile.readJsonFile(jsonJmeterStats);
         List<CSVRecord> csvKpiLines = UtilsCsvFile.readCsvFile(kpiFile);
 
+        GlobalResult globalResult = new GlobalResult();
+        List<CheckKpiResult> checkKpiResults = new ArrayList<>();
+        globalResult.setCheckKpiResults(checkKpiResults);
+        globalResult.setJsonJmeterStats(jsonJmeterStats);
+        globalResult.setKpiFile(kpiFile);
+
+        int nbFailed = 0;
         Document document = UtilsJUnitXml.createJUnitRootDocument();
         for (int i = 0; i < csvKpiLines.size(); i++) {
             CSVRecord recordKpiLine = csvKpiLines.get(i);
@@ -130,15 +178,41 @@ public class JUnitReportFromJMDashboardStats {
             CheckKpiResult checkKpiResult = verifyKpi(csvKpiLines.get(i), listStats);
             if (checkKpiResult.isKpiFail()) {
                 isFail = true;
+                nbFailed++;
                 String className = checkKpiResult.getMetricJsonAttribute() + " (" + checkKpiResult.getLabelRegex() + ") " + checkKpiResult.getComparator() + " "  + checkKpiResult.getThreshold();
                 UtilsJUnitXml.addTestCaseFailure(document,checkKpiResult.getNameKpi(), className, checkKpiResult.getFailMessage());
             } else {
                 String className = checkKpiResult.getMetricJsonAttribute() + " (" + checkKpiResult.getLabelRegex() + ") " + checkKpiResult.getComparator() + " "  + checkKpiResult.getThreshold();
                 UtilsJUnitXml.addTestCaseOk(document,checkKpiResult.getNameKpi(), className);
             }
+            globalResult.getCheckKpiResults().add(checkKpiResult);
         }
+        globalResult.setNumberOfKpis(csvKpiLines.size());
+        globalResult.setNumberFailed(nbFailed);
+
         LOGGER.info("Write junitFile=" + junitFile);
-        UtilsJUnitXml.saveXmlInFile(document, junitFile);
+        UtilsJUnitXml.saveXmlFile(document, junitFile);
+
+        if (!K_NOT_SET.equals(htmlFile)) {
+            LOGGER.info("Write html file=" + htmlFile);
+            UtilsHtml.saveHtmlFile(globalResult, htmlFile, K_TYPE_HTML_TEMPLATE);
+        }
+
+        if (!K_NOT_SET.equals(divHtmlFile)) {
+            LOGGER.info("Write Div Html file=" + divHtmlFile);
+            UtilsHtml.saveHtmlFile(globalResult, divHtmlFile, K_TYPE_DIV_HTML_TEMPLATE);
+        }
+
+        if (!K_NOT_SET.equals(csvFile)) {
+            LOGGER.info("Write csv file=" + csvFile);
+            UtilsCsvFile.saveCsvFile(globalResult, csvFile);
+        }
+
+        if (!K_NOT_SET.equals(jsonFile)) {
+            LOGGER.info("Write json file=" + jsonFile);
+            UtilsJsonFile.saveJsonFile(globalResult, jsonFile);
+        }
+
         return isFail;
     }
 
@@ -166,7 +240,7 @@ public class JUnitReportFromJMDashboardStats {
         checkKpiResult.setThreshold(threshold.trim());
 
         checkKpiResult.setKpiFail(false);
-        checkKpiResult.setFailMessage("NOT SET");
+        checkKpiResult.setFailMessage("");
 
         Pattern patternRegex = Pattern.compile(labelRegex) ;
 
@@ -308,7 +382,8 @@ public class JUnitReportFromJMDashboardStats {
         String footer = "E.g : java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-<version>-jar-with-dependencies.jar -" + K_JSON_JM_STATS_OPT + " statistics.json  -" +
                 K_KPI_FILE_OPT + " kpi.csv -" + K_EXIT_RETURN_ON_FAIL_OPT + " true\n";
         footer += "or more parameters : java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-<version>-jar-with-dependencies.jar -" + K_JSON_JM_STATS_OPT + " statistics.json  -"
-                + K_KPI_FILE_OPT + " kpi_check.csv -" + K_JUNIT_XML_FILE_OPT + " junit.xml -" + K_EXIT_RETURN_ON_FAIL_OPT + " true\n";
+                + K_KPI_FILE_OPT + " kpi_check.csv -" + K_JUNIT_XML_FILE_OPT + " junit.xml -" +
+                K_OUT_HTML_FILE_OPT + " result.html -" + K_OUT_DIV_HTML_FILE_OPT + " div_result.html -" + K_OUT_CSV_FILE_OPT + " result.csv -" + K_OUT_JSON_FILE_OPT + " result.json -" + K_EXIT_RETURN_ON_FAIL_OPT + " false\n";
         formatter.printHelp(140, JUnitReportFromJMDashboardStats.class.getName(),
                 JUnitReportFromJMDashboardStats.class.getName(), options, footer, true);
     }
@@ -346,6 +421,22 @@ public class JUnitReportFromJMDashboardStats {
 
         if (line.hasOption(K_JUNIT_XML_FILE_OPT)) {
             properties.setProperty(K_JUNIT_XML_FILE_OPT, line.getOptionValue(K_JUNIT_XML_FILE_OPT));
+        }
+
+        if (line.hasOption(K_OUT_HTML_FILE_OPT)) {
+            properties.setProperty(K_OUT_HTML_FILE_OPT, line.getOptionValue(K_OUT_HTML_FILE_OPT));
+        }
+
+        if (line.hasOption(K_OUT_DIV_HTML_FILE_OPT)) {
+            properties.setProperty(K_OUT_DIV_HTML_FILE_OPT, line.getOptionValue(K_OUT_DIV_HTML_FILE_OPT));
+        }
+
+        if (line.hasOption(K_OUT_CSV_FILE_OPT)) {
+            properties.setProperty(K_OUT_CSV_FILE_OPT, line.getOptionValue(K_OUT_CSV_FILE_OPT));
+        }
+
+        if (line.hasOption(K_OUT_JSON_FILE_OPT)) {
+            properties.setProperty(K_OUT_JSON_FILE_OPT, line.getOptionValue(K_OUT_JSON_FILE_OPT));
         }
 
         if (line.hasOption(K_EXIT_RETURN_ON_FAIL_OPT)) {
@@ -386,6 +477,34 @@ public class JUnitReportFromJMDashboardStats {
                 .desc("junit file name out (Default : " + K_JUNIT_XML_FILE_DEFAULT + ")")
                 .build();
         options.addOption(junitXmlOutOpt);
+
+        Option htmlOutOpt = Option.builder(K_OUT_HTML_FILE_OPT).argName(K_OUT_HTML_FILE_OPT)
+                .hasArg(true)
+                .required(false)
+                .desc("Html out file result optional (E.g: result.html)")
+                .build();
+        options.addOption(htmlOutOpt);
+
+        Option divHtmlOutOpt = Option.builder(K_OUT_DIV_HTML_FILE_OPT).argName(K_OUT_DIV_HTML_FILE_OPT)
+                .hasArg(true)
+                .required(false)
+                .desc("Div Partial Html Page out file result optional (E.g: div_result.html), to include in an another HTML Page")
+                .build();
+        options.addOption(divHtmlOutOpt);
+
+        Option csvOutOpt = Option.builder(K_OUT_CSV_FILE_OPT).argName(K_OUT_CSV_FILE_OPT)
+                .hasArg(true)
+                .required(false)
+                .desc("Csv out file result optional (E.g: result.csv)")
+                .build();
+        options.addOption(csvOutOpt);
+
+        Option jsonOutOpt = Option.builder(K_OUT_JSON_FILE_OPT).argName(K_OUT_JSON_FILE_OPT)
+                .hasArg(true)
+                .required(false)
+                .desc("Json out file result optional (E.g: result.json)")
+                .build();
+        options.addOption(jsonOutOpt);
 
         Option exitReturnOnFailOpt = Option.builder(K_EXIT_RETURN_ON_FAIL_OPT).argName(K_EXIT_RETURN_ON_FAIL_OPT)
                 .hasArg(true)

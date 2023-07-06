@@ -52,6 +52,10 @@ public class CheckKpiResult {
     public boolean isKpiFail() {
         return isKpiFail;
     }
+    // for freemaker, not use is (isKpiFail) but get (getKpiFail)
+    public boolean getKpiFail() {
+        return isKpiFail;
+    }
 
     public void setKpiFail(boolean kpiFail) {
         isKpiFail = kpiFail;

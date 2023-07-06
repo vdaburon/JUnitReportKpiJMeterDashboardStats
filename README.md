@@ -1,6 +1,6 @@
 # Generating JUnit Report based on custom Key Performance Indicators (KPIs) applied to the JMeter Dashboard Statistics Json file
 
-This tool read KPI declarations in a file and apply the KPI assertion on a JMeter Dashboard Statistics Json file and generates a result file in JUnit XML format.
+This tool read KPI declarations in a file and apply the KPI assertion on a JMeter Dashboard Statistics Json file and generates a result file in JUnit XML format and others formats Html, Json and Csv.
 
 [Manual Dashboard](https://jmeter.apache.org/usermanual/generating-dashboard.html#report)
 JMeter Dashboard Statistics Json file could be generated in Command Line Interface (CLI) with :
@@ -41,19 +41,26 @@ Save in UTF-8 comma separator **no BOM** or csv with comma separator if you have
 ## Parameters 
 The tool have parameters :
 <pre>
-usage: io.github.vdaburon.jmeter.utils.jsonkpi.JUnitReportFromJMDashboardStats [-exitReturnOnFail &lt;exitReturnOnFail&gt;] [-help] -jsonStats &lt;jsonStats&gt;
+usage: io.github.vdaburon.jmeter.utils.jsonkpi.JUnitReportFromJMDashboardStats [-csvOutFile &lt;csvOutFile&gt;] [-divHtmlOutFile &lt;divHtmlOutFile&gt;]
+       [-exitReturnOnFail &lt;exitReturnOnFail&gt;] [-help] [-htmlOutFile &lt;htmlOutFile&gt;] [-jsonOutFile &lt;jsonOutFile&gt;] -jsonStats &lt;jsonStats&gt;
        [-junitFile &lt;junitFile&gt;] -kpiFile &lt;kpiFile&gt;
 io.github.vdaburon.jmeter.utils.jsonkpi.JUnitReportFromJMDashboardStats
+ -csvOutFile &lt;csvOutFile&gt;               Csv out file result optional (E.g: result.csv)
+ -divHtmlOutFile &lt;divHtmlOutFile&gt;       Div Partial Html Page out file result optional (E.g: div_result.html), to include in an another HTML
+                                        Page
  -exitReturnOnFail &lt;exitReturnOnFail&gt;   if true then when kpi fail then create JUnit XML file and program return exit 1 (KO); if false
                                         [Default] then create JUnit XML File and exit 0 (OK)
  -help                                  Help and show parameters
+ -htmlOutFile &lt;htmlOutFile&gt;             Html out file result optional (E.g: result.html)
+ -jsonOutFile &lt;jsonOutFile&gt;             Json out file result optional (E.g: result.json)
  -jsonStats &lt;jsonStats&gt;                 JMeter Dashboard stats file (E.g : statistics.json)
  -junitFile &lt;junitFile&gt;                 junit file name out (Default : jmeter-junit-plugin-jmstats.xml)
  -kpiFile &lt;kpiFile&gt;                     KPI file contains rule to check (E.g : kpi.csv)
 E.g : java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-&lt;version&gt;-jar-with-dependencies.jar -jsonStats statistics.json  -kpiFile
 kpi.csv -exitReturnOnFail true
 or more parameters : java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-&lt;version&gt;-jar-with-dependencies.jar -jsonStats statistics.json
--kpiFile kpi_check.csv -junitFile junit.xml -exitReturnOnFail true
+-kpiFile kpi_check.csv -junitFile junit.xml -htmlOutFile result.html -divHtmlOutFile div_result.html -csvOutFile result.csv -jsonOutFile
+result.json -exitReturnOnFail false
 </pre>
 
 ## JUnit Report XML file generated
@@ -89,6 +96,18 @@ A JUnit Report with KPIs display in Jenkins Build<br>
 If you click on link "Name Test" fail , you will show the fail message<br>
 ![junit jenkins build detail fail](doc/images/junit_report_jenkins_detail_fail.png)
 
+## Html out format
+The result could be a html page ou partial html page (div)
+![html out format](doc/images/html_out_result.png)
+
+## Csv out format
+The result in a csv file
+![csv out format](doc/images/csv_out_result.png)
+
+## Json out format
+The result in a Json file
+![csv out format](doc/images/json_out_result.png)
+
 ## License
 See the LICENSE file Apache 2 [https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
@@ -98,7 +117,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-<version>1.2</version>
+<version>1.3</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
 or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:java@create_junit-report-kpi-from-jmeter-json-statics`
@@ -117,7 +136,7 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
     <dependency>
       <groupId>io.github.vdaburon</groupId>
       <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-      <version>1.2</version>
+      <version>1.3</version>
     </dependency>
   </dependencies>
 
@@ -167,6 +186,8 @@ Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
+version 1.3 export result in html, json or csv format
+
 Version 1.2 change the Test Suite Name
 
 Version 1.1 change Fail Message when equality

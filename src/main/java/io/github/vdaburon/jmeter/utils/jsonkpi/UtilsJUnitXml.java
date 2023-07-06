@@ -151,7 +151,7 @@ public class UtilsJUnitXml {
      * @param junitXmlFileOut XML file to write
      * @throws TransformerException error when write XML file
      */
-    public static void saveXmlInFile(Document document, String junitXmlFileOut) throws TransformerException {
+    public static void saveXmlFile(Document document, String junitXmlFileOut) throws TransformerException {
         // create the xml file
         //transform the DOM Object to an XML File
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
