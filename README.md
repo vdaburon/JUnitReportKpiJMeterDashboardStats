@@ -117,7 +117,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-<version>1.3</version>
+<version>1.4</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
 or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:java@create_junit-report-kpi-from-jmeter-json-statics`
@@ -136,7 +136,7 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
     <dependency>
       <groupId>io.github.vdaburon</groupId>
       <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-      <version>1.3</version>
+      <version>1.4</version>
     </dependency>
   </dependencies>
 
@@ -180,12 +180,28 @@ This tool is a java jar, so it's could be use as simple jar (look at [Release](h
 java -jar junit-reporter-kpi-from-jmeter-dashboard-stats-&lt;version&gt;-jar-with-dependencies.jar -jsonStats statistics.json -kpiFile kpi.csv -junitFile junit-report.xml -exitReturnOnFail true
 </pre>
 
+## Tool installed with jmeter-plugins-manager 
+This tool could be installed with the jmeter-plugins-manager from jmeter.plugins.org.<br>
+The tool name is : "vdn@github - junit-reporter-kpi-from-jmeter-dashboard-stats tool"
+
+in JMETER_HOME\bin (Windows)
+<pre>
+junit-reporter-kpi-from-jmeter-dashboard-stats.cmd -jsonStats statistics.json -kpiFile kpi.csv -junitFile junit-report.xml -htmlOutFile result.html -csvOutFile result.csv
+</pre>
+or <br>
+in JMETER_HOME/bin (Linux or MacOS)
+<pre>
+junit-reporter-kpi-from-jmeter-dashboard-stats.sh -jsonStats statistics.json -kpiFile kpi.csv -junitFile junit-report.xml -htmlOutFile result.html -csvOutFile result.csv
+</pre>
+
 ## Link to others projects 
 Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-maven-plugin/jmeter-maven-plugin) set `<generateReports>true</generateReports>` to generate the dashboard with `statistics.json` file.<br>
 
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
+version 1.4 add jmeter-plugins.org installer
+
 version 1.3 export result in html, json or csv format
 
 Version 1.2 change the Test Suite Name

@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
     <packaging>jar</packaging>
     <name>Create a JUnit XML file with KPI rules from JMeter Dashboard Stats</name>
     <description>A tool that creates a JUnit XML file with KPI rules from JMeter JMeter Dashboard stats.json and generates a result file in JUnit XML format and other formats  : html, csv and json.</description>
@@ -188,5 +188,13 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- add version for the generated library in the script shell .cmd and .sh -->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
