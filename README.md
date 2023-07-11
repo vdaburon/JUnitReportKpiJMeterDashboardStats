@@ -120,7 +120,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 <version>1.4</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
-or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:java@create_junit-report-kpi-from-jmeter-json-statics`
+or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:exec@create_junit-report-kpi-from-jmeter-json-statics`
 
 ```xml
 
@@ -148,14 +148,19 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
         <version>1.2.1</version>
         <executions>
           <execution>
+            <!-- individual launch : mvn exec:exec@create_junit-report-kpi-from-jmeter-json-statics -->
             <id>create_junit-report-kpi-from-jmeter-json-statics</id>
             <phase>verify</phase>
             <goals>
-              <goal>java</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <mainClass>io.github.vdaburon.jmeter.utils.jsonkpi.JUnitReportFromJMDashboardStats</mainClass>
               <arguments>
+                <argument>-classpath</argument>
+                <!-- automatically creates the classpath using all project dependencies,
+                                     also adding the project build directory -->
+                <classpath/>
+                <argument>io.github.vdaburon.jmeter.utils.jsonkpi.JUnitReportFromJMDashboardStats</argument>
                 <argument>-kpiFile</argument>
                 <argument>${project.build.directory}/jmeter/testFiles/${kpiFile}</argument>
                 <argument>-jsonStats</argument>
