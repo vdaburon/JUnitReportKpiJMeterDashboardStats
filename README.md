@@ -205,7 +205,7 @@ Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
-version 1.5 date 2025-04-25 Change page title in templates, define unique table css class to avoid conflict, update libraries (jackson, commons-cli, commons-csv, freemarker, nexus-staging)
+version 1.5 date 2025-04-25, Change page title in templates, define unique table css class to avoid conflict, update libraries (jackson, commons-cli, commons-csv, freemarker, nexus-staging)
 
 version 1.4 date 2023-07-07, Add jmeter-plugins.org installer
 
