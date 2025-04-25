@@ -117,7 +117,7 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-<version>1.4</version>
+<version>1.5</version>
 ```
 Just include the plugin in your `pom.xml` and execute `mvn verify` <br>
 or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitFile=jmeter-junit-plugin-jmstats.xml exec:exec@create_junit-report-kpi-from-jmeter-json-statics`
@@ -136,7 +136,7 @@ or individual launch `mvn -DjsonStats=statistics.json -DkpiFile=kpi.csv -DjunitF
     <dependency>
       <groupId>io.github.vdaburon</groupId>
       <artifactId>junit-reporter-kpi-from-jmeter-dashboard-stats</artifactId>
-      <version>1.4</version>
+      <version>1.5</version>
     </dependency>
   </dependencies>
 
@@ -205,7 +205,9 @@ Usually this plugin is use with [jmeter-maven-plugin](https://github.com/jmeter-
 You could also use [jmeter-graph-tool-maven-plugin](https://github.com/vdaburon/jmeter-graph-tool-maven-plugin)
 
 ## Versions
-version 1.4 add jmeter-plugins.org installer
+version 1.5 date 2025-04-25 Change page title in templates, define unique table css class to avoid conflict, update libraries (jackson, commons-cli, commons-csv, freemarker, nexus-staging)
+
+version 1.4 date 2023-07-07, Add jmeter-plugins.org installer
 
 version 1.3 export result in html, json or csv format
 
