@@ -9,7 +9,7 @@
     <version>1.5</version>
     <packaging>jar</packaging>
     <name>Create a JUnit XML file with KPI rules from JMeter Dashboard Stats</name>
-    <description>A tool that creates a JUnit XML file with KPI rules from JMeter JMeter Dashboard stats.json and generates a result file in JUnit XML format and other formats  : html, csv and json.</description>
+    <description>A tool that creates a JUnit XML file with KPI rules from JMeter Dashboard stats.json and generates a result file in JUnit XML format and other formats  : html, csv and json.</description>
     <url>https://github.com/vdaburon/JUnitReportKpiJMeterDashboardStats</url>
     <inceptionYear>2023</inceptionYear>
 
